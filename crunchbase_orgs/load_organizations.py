@@ -28,9 +28,6 @@ except ModuleNotFoundError:
         TLD_FILE, SLEEP_SECS
 
 
-# TODO: testing
-# TODO: reorder method definitions
-# TODO: make company come before domain or email in method parameter lists
 class LoadOrganizations:
     """
     Gets organizations from Crunchbase
@@ -235,7 +232,6 @@ class LoadOrganizations:
             m = re.search(r'[^a-zA-Z0-9[\] .,\-\']', isp_string)
             if m:
                 print(m.start())
-                # TODO: eliminate the second raise
                 try:
                     raise ValueError('bad value read in get_isp_domain_dict()')
                 except ValueError:
@@ -254,7 +250,6 @@ class LoadOrganizations:
             m = re.search(r'[^,a-z\'[\] ]', tld_string)
             if m:
                 print(m.start())
-                # TODO: eliminate second raise
                 try:
                     raise ValueError('bad value read in get_tld_domain_dict()')
                 except ValueError:
@@ -607,7 +602,6 @@ class LoadOrganizations:
             return None, None
         self.indent_level += 1
         self.print_indented("Entering 'pick_match()'")
-        # TODO: change these lists to sets or dicts?
         pick_ix_list = []
         candidate_list = []
         company_word_list = company.lower().split(' ')

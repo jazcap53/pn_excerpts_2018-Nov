@@ -25,7 +25,6 @@ except ModuleNotFoundError:
     from constants import BASE_URL, DEFAULT_DATE
 
 
-# TODO: code cleanup
 class LoadLicenses:
     """
     Gets licenses from Marketplace APIs 'Export licenses' endpoint.
@@ -161,7 +160,6 @@ class LoadLicenses:
         :return: None
         Called by: main()
         """
-        # TODO: avoid converting data from JSON then back to JSON for dumps
         num_retrieved = 0
         if mkt_response.ok:
             curr_data = mkt_response.json()
