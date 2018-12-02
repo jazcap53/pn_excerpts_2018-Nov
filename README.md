@@ -9,4 +9,4 @@ lines. Blank lines are not included in this tally.
 
 ##### Technologies: 
 
-Python 3, PostgreSQL, JSON, MailChimp, Git, python-mailchimp3 (an API client).
+Python 3, PostgreSQL, JSON, MailChimp, Git, python-mailchimp3 (an API client), bash.
