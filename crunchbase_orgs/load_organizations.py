@@ -30,8 +30,8 @@ except ModuleNotFoundError:
 
 class LoadOrganizations:
     """
-    Gets organizations from Crunchbase
-
+    Gets organizations from Crunchbase. Lookup by domain name, then by
+    company name.
     Uses Crunchbase APIs '/odm-organizations' endpoint.
     Run as, e.g.:
     python3 mktplc_export_lics/src/load_licenses.py -s | \
@@ -134,6 +134,9 @@ class LoadOrganizations:
                             format='%(asctime)s: (%(levelname)s) %(message)s')
 
     def print_indented(self, text, dest=sys.stdout):
+        """
+        Indent debug output for greater readability
+        """
         if self.verbose:
             print('{}{}'.format('\t' * self.indent_level, text), file=dest)
 
@@ -148,6 +151,7 @@ class LoadOrganizations:
         while self.items_examined < stop_item:
             if self.items_examined and not self.items_examined % 25:
                 self.print_progress()
+            # introduce delays to keep from exceeding CB request limit
             if self.items_examined and not self.items_not_skipped % 25 \
                     and self.items_examined > start_item:
                 print('SLEEPING {}'.format(SLEEP_SECS))
@@ -167,8 +171,9 @@ class LoadOrganizations:
         self.temp_file_to_json()
 
     def temp_file_to_json(self):
+        """Convert temp file to valid JSON"""
         if self.domain_search_outfile:
-            self.convert_domain_search_output()  # convert temp file to valid JSON
+            self.convert_domain_search_output()
         if self.name_search_outfile:
             self.convert_name_search_output()
         try:
@@ -178,8 +183,8 @@ class LoadOrganizations:
 
     def connect_to_cb_or_die(self):
         """
-
-        :return:
+        Try to connect to CB; if not successful, delay and retry.
+        :return: None
         Called by: get_each_license()
         """
         connected = False
@@ -273,8 +278,6 @@ class LoadOrganizations:
         """
         self.print_indented('{} items examined in {:.1f} secs  ({} items skipped)'.
                             format(self.items_examined,
-                                   # self.items_not_skipped,
-                                   # self.items_examined - self.items_skipped,
                                    self.time_used_cb,
                                    self.items_skipped),
                             sys.stderr)
@@ -363,7 +366,7 @@ class LoadOrganizations:
         :param company: associated with the tech contact email address
                         from which domain was extracted
         :param domain: extracted from tech contact email address
-        :param payload:
+        :param payload: holds the domain of the company being searched
         :return: bool 'stored', true iff company was stored in
                                 'pn_organizations' and not removed
         Called by: handle_company_and_email()
@@ -387,7 +390,6 @@ class LoadOrganizations:
         domain_response_dict = self.query_cb_orgs_by_domain(payload)
         time_used = time.time() - start
         self.time_used_cb += time_used
-        # query cb by domain name
         domain_response_len = self.get_response_len(domain_response_dict)
         self.tally_domain_hits(domain_response_len)
         if domain_response_len:  # query yields hit(s)
