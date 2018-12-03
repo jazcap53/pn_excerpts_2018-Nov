@@ -11,11 +11,12 @@ import psycopg2
 
 class ImportAndAddSubscribers:
     """
-
+    Import subscriber emails from a test db and upsert them to
+    a MailChimp List
     """
     def __init__(self):
         """
-
+        Called by: main()
         """
         self.pg_host = ''
         self.pg_name = ''
@@ -29,16 +30,17 @@ class ImportAndAddSubscribers:
 
     def get_c_l_args(self, argv=None):
         """
+        Get command line arguments
         Called by: main()
         """
         parser = argparse.ArgumentParser()
-        parser.add_argument("list_id", help='A Mailchimp List ID')
+        parser.add_argument("list_id", help='A MailChimp List ID')
         args = parser.parse_args(argv)
         self.list_id = args.list_id
-        pass
 
     def get_env_vars(self):
         """
+        Get environment variables
         CHIMPKEY is set in a separate file from the other env vars
         Called by: main()
         """
@@ -75,7 +77,7 @@ class ImportAndAddSubscribers:
 
         self.pg_conn = psycopg2.connect(pg_conn_string)
 
-    # 500 rows will be accepted by MailChimp at a time
+    # up to 500 rows will be accepted by MailChimp at a time
     def read_from_pg(self):
         """
         Read data from Postgresql to be upserted to MailChimp List
